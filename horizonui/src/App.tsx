@@ -1,35 +1,51 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css'
 
+import { Topbar } from './Components/Layout/Topbar'
+import { Dashboard } from './Pages/Dashboard';
+import { LoginModal } from './Components/ui/LoginModal'
+import { Footer } from './Components/Layout/Footer';
+import { Analytics } from './Pages/Analytics';
+import { Portfolio } from './Pages/Portfolio';
+import { Recession } from './Pages/Recession';
+import { Settings } from './Pages/Settings';
+
+
+
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className='min-h-screen flex flex-col'>
+        
+        {/* Topbar */}
+        <Topbar onLoginClick={() => setIsLoginOpen(true)} />
+
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 lg:px-8 py-6">
+          {/* <Dashboard /> */}
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/recession" element={<Recession />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+        
+        </main>
+
+        {/* Footer */}
+        <Footer></Footer>
+
+        {/* Login Modal */}
+        <LoginModal
+          isOpen={isLoginOpen} 
+          onClose={() => setIsLoginOpen(false)}
+          />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
   )
 }
 
 export default App
+ 
