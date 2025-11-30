@@ -10,12 +10,24 @@ import { Analytics } from './Pages/Analytics';
 import { Portfolio } from './Pages/Portfolio';
 import { Recession } from './Pages/Recession';
 import { Settings } from './Pages/Settings';
+import { RegisterModal } from './Components/ui/RegisterModal';
 
 
 
 function App() {
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
+  const openLogin = () => {
+    setIsRegisterOpen(false);
+    setIsLoginOpen(true);
+  }
+
+  const openRegister = () => {
+    setIsLoginOpen(false);
+    setIsRegisterOpen(true);
+  }
 
   return (
       <div className='min-h-screen flex flex-col'>
@@ -42,6 +54,13 @@ function App() {
         <LoginModal
           isOpen={isLoginOpen} 
           onClose={() => setIsLoginOpen(false)}
+          onRegisterClick={openRegister}
+          />
+        
+        <RegisterModal 
+          isOpen={isRegisterOpen}
+          onClose={() => setIsRegisterOpen(false)}
+          onLoginClick={openLogin}
           />
       </div>
   )
