@@ -18,7 +18,7 @@ Phase 2 — Core Backend
 
 ✅ Add /login + /register endpoints (JWT auth)
 
-⬜ Connect Authentication with frontend Login Modal
+✅ Connect Authentication with frontend Login Modal
 
 ⬜ Add /recession-metrics endpoint with dummy data
 
