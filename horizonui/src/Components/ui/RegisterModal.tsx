@@ -1,34 +1,26 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { X, Eye, EyeOff } from "lucide-react"
-import Icon from '../../assets/horizon.svg?react';
-import { RegisterModal } from "./RegisterModal";
+import Icon from '../../assets/horizon.svg?react'
 
-
-interface LoginModalProps {
-  isOpen: boolean;
+interface RegisterModalProps {
+  isOpen: boolean,
   onClose: () => void;
-  onRegisterClick: () => void;
+  onLoginClick: () => void;
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegisterClick }) => {
+export const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onLoginClick }) => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
+    confirmPassword: ""
   });
 
   if (!isOpen) return null;
-
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    console.log('Login Submitted: ', formData);
-    // Logic goes here, will come back later
-    onClose();
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -37,12 +29,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
     });
   };
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
     try {
-      const res = await fetch("http://localhost:8080/auth/login", {
+      const res = await fetch("http://localhost:8080/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
       });
 
       if (!res.ok) {
@@ -52,21 +52,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
       }
 
       const data = await res.json();
-      const token = data.token;
-
-      localStorage.setItem("northbeam_token", token);
-      setIsLoggedIn(true);
+      console.log("Registration successful: ", data);
 
       onClose();
 
-      navigate("/dashboard");
-    } catch (err) {
+    }
+    catch (err) {
       console.error(err);
       setErrorMessage("Network Error");
     }
-  }
+  };
 
-    return (
+  return (
     <>
       {/* Backdrop */}
       <div 
@@ -83,9 +80,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
             className="absolute top-4 right-4 p-1 text-gray-400 hover:text-green-700 hover:bg-blue-900 rounded transition-colors"
             onClick={onClose}
             aria-label="Close">
-            
             <X size={20} />
-
           </button>
 
           {/* Logo */}
@@ -97,24 +92,31 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
 
           {/* Title */}
           <h2 className="text-2xl font-bold text-center text-white mb-6">
-            Welcome Back
+            Create Account
           </h2>
+
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm">
+              {errorMessage}
+            </div>
+          )}
 
           {/* Form */}
           <div className="space-y-4">
-            {/* Username */}
+            {/* Email */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-1">
-                Username
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+                Email
               </label>
               <input 
-                type="text"
+                type="email"
                 id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-blue-900 border border-green-700/30 rounded-lg text-white placeholder-gray-500 focus:ring-1 focus:ring-green-800 focus:border-transparent outline-none transition-all"
-                placeholder="Enter Your Username"
+                placeholder="Enter Your Email"
               />
             </div>
 
@@ -131,44 +133,61 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full px-4 py-2 bg-blue-900 border border-green-700/30 rounded-lg text-white placeholder-gray-500 focus:ring-1 focus:ring-green-800 focus:border-transparent outline-none transition-all"
-                  placeholder="Enter Your Password"
+                  placeholder="Create a Password"
                 />
                 <button 
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-700 transition-colors"
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>  
             </div>
 
-            {/* Forgot Password */}
-            <div className="text-right">
-              <a href="#forgot-password" className="text-sm text-green-700 hover:text-green-500 hover:underline">
-                Forgot Password
-              </a>
+            {/* Confirm Password */}
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-1">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input 
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 bg-blue-900 border border-green-700/30 rounded-lg text-white placeholder-gray-500 focus:ring-1 focus:ring-green-800 focus:border-transparent outline-none transition-all"
+                  placeholder="Confirm Your Password"
+                />
+                <button 
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-700 transition-colors"
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>  
             </div>
 
-            {/* Login Button */}
+            {/* Sign Up Button */}
             <button 
-              onClick={handleLogin}
+              onClick={handleRegister}
               className="w-full py-2.5 bg-green-800 text-white rounded-lg font-medium hover:bg-green-700 transition-colors shadow-lg">
-              Login
+              Sign Up
             </button>
           </div>
 
-          {/* Sign Up */}
+          {/* Login Link */}
           <div className="mt-6 text-center text-sm text-gray-400">
-            Don't have an account?{' '}
+            Already have an account?{' '}
             <button 
-              onClick={onRegisterClick}
+              onClick={onLoginClick}
               className="text-green-700 font-medium hover:text-green-500 hover:underline bg-transparent border-0 cursor-pointer">
-              Sign Up
+              Login
             </button>
           </div>
         </div>
       </div>
     </>
   )
+
 }

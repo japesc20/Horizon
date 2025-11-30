@@ -11,7 +11,7 @@ var DB *sql.DB
 
 func InitDB() {
 	var err error
-	DB, err = sql.Open("sqlite", "./northbeam.db")
+	DB, err = sql.Open("sqlite", "northbeam.db")
 	if err != nil {
 		log.Fatal(err)
 	}
