@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"northbeam-horizon/internal/database"
@@ -26,6 +27,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err := database.DB.Exec("INSERT INTO users (email, password_hash) VALUES (?, ?)", creds.Email, string(hash))
 	if err != nil {
+		fmt.Println("DB Error: ", err)
 		http.Error(w, "Email already exists", http.StatusConflict)
 		return
 	}
