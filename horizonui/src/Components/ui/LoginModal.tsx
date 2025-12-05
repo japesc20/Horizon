@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { X, Eye, EyeOff } from "lucide-react"
 import Icon from '../../assets/horizon.svg?react';
 import { RegisterModal } from "./RegisterModal";
+import '../../index.css'
 
 
 interface LoginModalProps {
@@ -23,12 +24,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    console.log('Login Submitted: ', formData);
-    // Logic goes here, will come back later
-    onClose();
-  };
+  // const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   console.log('Login Submitted: ', formData);
+  //   // Logic goes here, will come back later
+  //   onClose();
+  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -70,12 +71,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/80 z-70 flex items-center justify-center p-4"
         onClick={onClose}>
 
         {/* Modal */}
         <div 
-          className="bg-blue-950 rounded-lg shadow-2xl w-full max-w-md p-8 relative border border-green-700/30"
+          className="bg-brand-primary rounded-lg shadow-2xl w-full max-w-md p-8 relative border border-green-700/30"
           onClick={(e) => e.stopPropagation()}>
 
           {/* Close Button */}
@@ -90,7 +91,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
 
           {/* Logo */}
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-blue-900 rounded-full flex items-center justify-center border-2 border-green-700">
+            <div className="w-16 h-16 bg-brand=primary rounded-full flex items-center justify-center border-2 border-green-700">
               <Icon className="w-8 h-8 text-green-700" />
             </div>
           </div>
@@ -105,7 +106,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
             {/* Username */}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-1">
-                Username
+                Email
               </label>
               <input 
                 type="text"
@@ -113,7 +114,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-blue-900 border border-green-700/30 rounded-lg text-white placeholder-gray-500 focus:ring-1 focus:ring-green-800 focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-2 bg-brand-primary-tint border border-green-700/30 rounded-lg text-white placeholder-gray-400 focus:ring-1 focus:ring-green-800 focus:border-transparent outline-none transition-all"
                 placeholder="Enter Your Username"
               />
             </div>
@@ -130,7 +131,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegis
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-blue-900 border border-green-700/30 rounded-lg text-white placeholder-gray-500 focus:ring-1 focus:ring-green-800 focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-2 bg-brand-primary-tint border border-green-700/30 rounded-lg text-white placeholder-gray-400 focus:ring-1 focus:ring-green-800 focus:border-transparent outline-none transition-all"
                   placeholder="Enter Your Password"
                 />
                 <button 

@@ -19,13 +19,18 @@
   }
 }
 
+@theme {
+      --color-brand-primary: #081a25; 
+      --color-brand-primary-tint: #03131c; 
+    }
+
 
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #081a25;
+  background-color: var(--color-brand-primary);
 }
 
 body {
